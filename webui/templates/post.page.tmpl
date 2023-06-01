@@ -1,0 +1,121 @@
+{{template "base" .}}
+
+{{define "title"}}Post{{.Post.ID}}{{end}}
+
+{{define "main"}}
+    {{$loggedin := .Session.IsLoggedin}}
+    {{$loggedUser := .Session.User}}
+    {{$likesPost := .LikesStorage.Post}}
+    {{$likesComment := .LikesStorage.Comment}}
+
+    <div class="post">
+        {{with .Post}}
+            <p id ={{.ID}} class="post-id">#{{.ID}} by {{template "linkuser" .}} {{range .Categories}} <span id={{.ID}}>, #{{.Name}}</span>{{end}}</p>
+            <div id="{{.ID}}-content" class="post-content">
+                <p><b>{{.Theme}}</b></p>
+                <p>{{.Message.Content}}</p>
+                <div id="images">
+                    {{range .Message.Images}}
+                        <img src="{{.}}"/>
+                    {{end}}
+                </div>
+            </div>
+        {{end}}
+
+        {{with .Post}}
+            {{if and $loggedin (eq $loggedUser.ID .ID)}}
+                <div>
+                    <label for="p-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload" >Download</label>
+                    <input
+                        type="file"
+                        class="hidden image_uploads"
+                        id="p-{{.ID}}-image_uploads" 
+                        messageType="p" messageID="{{.ID}}" 
+                        name="images"
+                        accept=".jpg, .jpeg, .png, svg, gif, bmp"
+                        onclick="imageDownload(this.id)"/>
+                </div>
+                <div id="p-{{.ID}}-preview" class="preview">
+                    <p>No files currently selected for upload</p>
+                </div>
+            {{end}}
+        {{end}}
+
+        <div id="reactions">
+            {{if $loggedin}}
+                {{with .Post}}
+                    <span id="{{.ID}}-posts_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-posts_likes-true" messageID="{{.ID}}" messageType="{{$likesPost}}" like="true" class="likeicon" name="post-true" onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
+                    <span id="{{.ID}}-posts_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-posts_likes-false" messageID="{{.ID}}" messageType="{{$likesPost}}" like="false" class="likeicon" name="post-false" onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></button>
+                {{end}}
+            {{else}} 
+                {{with .Post}}
+                    <span id="{{.ID}}-posts_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-posts_likes-true" class="likeicon not-active-link" name="post-true"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
+                    <span id="{{.ID}}-posts_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-posts_likes-false" class="likeicon not-active-link" name="post-false"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></img></button>
+                {{end}}
+            {{end}}
+        </div>
+    </div>
+
+    {{range .Post.Comments}}
+        <div id="comments-{{.ID}}" class="post">
+            <p class="post-id">#{{.ID}} by {{template "linkuser" .}} </p>
+            <div id="{{.ID}}-comment-content" class="post-content">
+                <p>{{.Message.Content}}</p>
+                <div id="images">
+                    {{range .Message.Images}}
+                        <img src="{{.}}"/>
+                    {{end}}
+                </div>
+            </div>
+
+             {{if and $loggedin (eq $loggedUser.ID .ID)}}
+                <div>
+                    <label for="c-{{.ID}}-image_upload"  class="signinupformbutton labelfordownload"  onclick="imageDownload(this.id)">Download</label>
+                    <input
+                        type="file"
+                        class="hidden image_uploads"
+                        id="c-{{.ID}}-image_uploads" 
+                        messageType="c" messageID="{{.ID}}" 
+                        name="images"
+                        accept=".jpg, .jpeg, .png, svg, gif, bmp"
+                        />
+                </div>
+                <div id="c-{{.ID}}-preview" class="preview">
+                    <p>No files currently selected for upload</p>
+                </div>
+            {{end}}
+    
+            <div id="reactions">
+                {{if $loggedin}}
+                    <span id="{{.ID}}-comments_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-comments_likes-true" messageID="{{.ID}}" messageType="{{$likesComment}}" like="true" class="likeicon" name="comment-true"  onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
+                    <span id="{{.ID}}-comments_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-comments_likes-false" messageID="{{.ID}}" messageType="{{$likesComment}}" like="false" class="likeicon" name="comment-false"  onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></button>
+                {{else}} 
+                    <span id="{{.ID}}-comments_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-comments_likes-true" class="likeicon not-active-link" name="comment-true"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
+                    <span id="{{.ID}}-comments_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-comments_likes-false" class="likeicon not-active-link" name="comment-false"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></img></button>
+                {{end}}
+            </div>
+        </div>
+    {{end}}
+    {{if .Session.IsLoggedin}}
+        <form id="writecomment" class="post" method="post" enctype="multipart/form-data" onsubmit="return validateComment()">
+            <input id="invisible" name="authorID" value="{{.Session.User.ID}}"></input>
+            <textarea id="newcomment" name="content" placeholder="Write your comment..." onclick="checkComment()"></textarea>
+            <div>
+                <label for="image_uploads"  class="signinupformbutton labelfordownload" >Download</label>
+                <input
+                    type="file"
+                    class="hidden image_uploads"
+                    id="image_uploads" 
+                    name="images"
+                    accept=".jpg, .jpeg, .png, svg, gif, bmp"
+                    multiple/>
+                </div>
+            <div id="preview" class="preview">
+                <p>No files currently selected for upload</p>
+            </div>
+            <button id="submitcomment" class="signinupformbutton">Submit</button>
+        </form>
+    {{end}}
+<script>choseImage()</script>
+
+{{end}}  

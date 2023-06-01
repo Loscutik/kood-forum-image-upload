@@ -1,0 +1,41 @@
+{{template "base" .}}
+
+{{define "title"}}Create post{{end}}
+
+{{define "main"}}
+    
+    <div>
+        <div class="post">
+            <form id="pform" name="pform" action="/post/create" method="post" enctype="multipart/form-data" onclick="CheckValidatePost();">
+                <input  id="invisible" name="authorID" value="{{.Session.User.ID}}"></input>
+                <input type="text" id="PostTopic" name="theme" placeholder="Header"><br><br>
+                <textarea id="textarea_newpost" name="content" placeholder="Enter your text here..."></textarea><br><br>
+                
+                <div>
+                    <label for="image_uploads"  class="signinupformbutton labelfordownload" >Download</label>
+                    <input
+                        type="file"
+                        class="hidden image_uploads"
+                        id="image_uploads" 
+                        name="images"
+                        accept=".jpg, .jpeg, .png, svg, gif, bmp"
+                        multiple/>
+                </div>
+                <div id="preview" class="preview">
+                    <p>No files currently selected for upload</p>
+                </div>
+
+                <div id="choosepostcategory">
+                <label for="checkbox" id="choosetags">Choose tags:</label><br><br>
+                {{range .Categories}}
+                    <label class="categorylabel"><input type="checkbox" id = {{.ID}} class="categories" name="categoriesID" value={{.ID}}>{{.Name}}</label>
+                {{end}}
+                </div>
+                <button type="submit" id="submitpost" class="signinupformbutton" onclick="Up()">Create post</button>
+            </form>
+        </div>
+    </div>
+
+    <script>choseImage()</script>
+
+{{end}}   

@@ -1,0 +1,546 @@
+#body {
+    background-color: rgb(246, 246, 246);
+    margin: 0px;
+}
+#header {
+    display: block;
+    position: fixed;
+    padding: 0px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 30 px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 3px 50px rgba(0, 0, 0, 0.1);
+    transition: 0.2s;
+    z-index: 90;
+}
+#logo {
+    display: block;
+    float:left;
+    margin-left: 40px;
+    height: 55px;
+}
+#createpost {
+    display: block;
+    margin-right: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 85px;
+    background-color: rgb(255, 193, 47);
+    border-radius: 20px;
+    padding: 10px;
+    padding-left: 35px;
+    padding-right: 35px;
+    text-decoration: none;
+    color:white;
+    font-family: 'Roboto', sans-serif;
+    transition: 0.2s;
+}
+#createpost:hover {
+    background-color: rgb(234, 176, 43);
+    box-shadow: inset 0px 5px 10px 1px rgba(0, 0, 0, 0.05);
+}
+#signinup {
+    display: flex;
+    float: right;
+    margin-right: 40px;
+    margin-top: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+.signin {
+    display: block;
+    text-decoration: none;
+    background: none;
+	color: inherit;
+	border: none;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    color:rgb(64, 64, 64);
+    transition: 0.2s;
+}
+.signin:hover {
+    color: rgb(234, 176, 43);
+    text-decoration: underline;
+}
+#username:hover {
+    cursor: pointer;
+}
+#headerbuttons {
+    float:right;
+    display: flex;
+}
+#ticksuccessfulreg {
+    width:100px;
+    margin-top: 70px;
+    margin-left: 290px;
+}
+#success {
+    margin-left: 197px;
+    margin-bottom: 12px;
+    font-size: 40px;
+    color: rgba(0, 0, 0, 0.75);
+}
+#accountcreated {
+    margin-left: 219px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.8);
+}
+#signinsuccess {
+    margin-left: 238px;
+    margin-bottom: 70px;
+    margin-top: 70px;
+    width: 200px;
+    height: 50px;
+    border-radius: 30px;
+    font-size: 20px;
+}
+#deniedlogo {
+    width:210px;
+    margin-top: 70px;
+    margin-left: 235px;
+}
+#error403 {
+    margin-left: 228px;
+    margin-bottom: 8px;
+    font-size: 55px;
+    color: rgb(211, 45, 30);
+    font-weight: 800;
+}
+#denied {
+    margin-left: 193px;
+    margin-bottom: 50px;
+    margin-top: 0px;
+    font-size: 37px;
+    color: rgb(211, 45, 30);
+    font-weight: 800;
+}
+#oops {
+    margin-left: 115px;
+    font-size: 20px;
+    margin-bottom: 50px;
+    color: rgba(0, 0, 0, 0.7);
+}
+#makesure {
+    margin-left: 180px;
+    margin-top: 30px;
+    font-size: 18px;
+    color: rgba(0, 0, 0, 0.3);
+}
+
+#signindenied {
+    margin-left: 280px;
+    margin-bottom: 70px;
+    margin-top: 70px;
+}
+.categories {
+    visibility: hidden;
+}
+.categorylabel {
+    display: inline-block;
+    background-color: rgb(255, 255, 255);
+    border: solid rgb(255, 193, 47) 2px;
+    border-radius: 3px;
+    margin: 3px;
+    margin-bottom: 25px;
+    padding: 10px;
+    padding-left: 0px;
+    padding-right: 20px;
+}
+.categorylabel.selected {
+    background-color: rgb(255, 193, 47);
+    color: rgb(255, 255, 255);
+}
+#user {
+    display: flex;
+    float: right;
+    margin-right: 40px;
+    margin-top: 20px;
+    font-family: 'Roboto', sans-serif;
+    cursor: pointer;
+}
+#avatar {
+    display: flex;
+    margin-right: 10px;
+    margin-top: -6px;
+}
+#textarea_newpost {
+    margin: 20px;
+    width: 638px;
+    height: 350px;
+    resize: none;
+    padding: 10px;
+    border: solid 1px;
+    border-radius: 3px;
+    border-color: rgb(0, 0, 0);
+}
+#PostTopic {
+    margin: 20px 20px 0px 20px;
+    width: 646px;
+    height: 30px;
+    padding: 5px;
+    border: solid 1px;
+    border-radius: 3px;
+    border-color: rgb(0, 0, 0);
+}
+#submitpost {
+    width: 140px;
+    height: 40px;
+    margin: 6px 0px 25px 540px;
+    border-radius: 3px;
+}
+#choosepostcategory {
+    margin-left: 20px;
+}
+#submitcomment {
+    width: 140px;
+    height: 40px;
+    margin: 6px 0px 25px 540px;
+    border-radius: 3px;
+}
+#newcomment {
+    margin: 20px;
+    width: 655px;
+    height: 150px;
+    resize: none;
+}
+#filterform {
+    display: none;
+}
+#fform {
+    margin: 20px;
+    display: inline-block;
+}
+#profileimage {
+    display: block;
+    width: 150px;
+    margin: 50px;
+}
+#userinfo {
+    display: block;
+    margin-left: 260px;
+    margin-top: -170px;
+    margin-bottom: 80px;
+}
+#usnsett {
+    pointer-events: none;
+    background-color: rgb(225, 225, 225);
+    border: solid 1px;
+    border-radius: 2px;
+    height: 20px;
+    width: 165px;
+}
+#openfiltersbutton {
+    display: block;
+    position: absolute;
+    z-index: 50;
+    margin-left: 998px;
+}
+#filterslogo {
+    display: block;
+}
+#closefilterslogo {
+    display: none;
+}
+#darkness {
+    display: none;
+    z-index: 98;
+    position: fixed;
+    margin-top: -220px;
+    width: 100%;
+    height: 130%;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: 0.2s;
+}
+#signinform {
+    display: none;
+    margin-left: 37%;
+    position: fixed;
+    z-index: 99;
+    margin-top: 20px;
+    background-color: rgb(255, 255, 255);
+    border:rgba(0, 0, 0, 0.09);
+    border-style: solid;
+    font-family: 'Roboto', sans-serif;
+    color:rgb(64, 64, 64);
+    border-width: 1px;
+    padding: 40px;
+    transition: 0.2s;
+}
+#signupform {
+    display: none;
+    margin-left: 37%;
+    position: fixed;
+    z-index: 100;
+    margin-top: 20px;
+    background-color: rgb(255, 255, 255);
+    border:rgba(0, 0, 0, 0.09);
+    font-family: 'Roboto', sans-serif;
+    color:rgb(64, 64, 64);
+    border-style: solid;
+    border-width: 1px;
+    padding: 40px;
+    transition: 0.2s;
+}
+.signinupformbutton {
+    display: block;
+    margin-right: 25px;
+    margin-bottom: 10px;
+    width: 120px;
+    background-color: rgb(255, 193, 47);
+    border-radius: 20px;
+    border-style: none;
+    padding: 10px;
+    padding-left: 35px;
+    padding-right: 35px;
+    text-decoration: none;
+    color:white;
+    font-family: 'Roboto', sans-serif;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.signinupformbutton:hover {
+    background-color: rgb(234, 176, 43);
+}
+#usersidepanel {
+    display: block;
+    position: fixed;
+    right: 0px;
+    width: 250px;
+    height: 1200px;
+    margin-top: -100px;
+    background-color: rgb(234, 176, 43);
+    font-family: 'Roboto', sans-serif;
+    z-index: 70;
+    transition: right 0.5s;
+    box-shadow: -10px 0px 50px 0px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+#userpanelmenu {
+    list-style-type: none;
+    color: rgb(255, 255, 255);
+    padding: 0px;
+}
+.li {
+    margin: 0px;
+    padding: 20px;
+    transition: 0.2s;
+    border-bottom: 1px solid rgba(192, 154, 19, 0.6);
+}
+.li:hover {
+    background: rgb(2,0,36);
+    background: linear-gradient(119deg, rgba(255,252,0,0.7) 0%, rgba(255,200,0,0.7) 100%);
+}
+.li:first-child {
+    margin-top: 81px;
+    border-top: 1px solid rgba(192, 154, 19, 0.6);
+}
+.solid {
+    margin: 0px;
+    padding: 0px;
+}
+.post {
+    display: block;
+    width: 700px;
+    border:rgba(0, 0, 0, 0.09);
+    border-style: solid;
+    border-width: 1px;
+    margin: 0 auto;
+    margin-top: 80px;
+    margin-bottom: -63px;
+    background-color: rgb(255, 255, 255);
+    font-family: 'Roboto', sans-serif;
+}
+.post-id {
+    display: block;
+    margin: 20px;
+    color:rgb(64, 64, 64);
+    transition: 0.3s;
+}
+.post-id:hover {
+    color: rgb(234, 176, 43);
+}
+.post-content {
+    margin: 20px;
+    width: 660px;
+}
+#reactions {
+    margin: 20px;
+    margin-top: 30px;
+    display: flex;
+}
+.likeicon {
+    width: 30px;
+    height: 30px;
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+    opacity: 0.75;
+    transition: 0.2s;
+}
+.likeicon:hover {
+    opacity: 1;
+}
+.comments-link {
+    text-decoration: none;
+    padding: 10px;
+    color:rgb(64, 64, 64);
+    transition: 0.2s;
+}
+.comments-link:hover {
+    color: rgb(234, 176, 43);
+}
+#footer {
+    display: block;
+    background-color: rgb(255, 193, 47);
+    height: 100px;
+    margin-top: 180px;
+}
+#footertext {
+    width: 700px;
+    margin: 0 auto;
+    padding-top: 80px;
+    padding-left: 50px;
+    color: rgb(255, 255, 255);
+    font-family: 'Roboto', sans-serif;
+}
+
+.not-active-link {
+    cursor: default;
+    opacity: 0.33;
+}
+
+.not-active-link:hover {
+    opacity: 0.33;
+}
+
+a {
+    text-decoration: none;
+    color:rgb(64, 64, 64);
+}
+
+.warning {
+    color:rgb(239, 77, 93);
+    display: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+#invisible{
+    display: none;
+}
+
+#mainpic {
+    margin: 0 auto;
+    width: 40%;
+   }
+
+.switches {
+    display: block;
+}
+.labls {
+    display: inline-block;
+    padding-top: 10px;
+    opacity: 0.7;
+}
+#filtr {
+    margin-top: 20px;
+}
+  /* Toggle switches */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 57px;
+    height: 28px;
+    border: solid rgb(255, 193, 47) 2px;
+    border-radius: 19px;
+    margin: 7px;
+    margin-left: 120px;
+  }
+  #liks {
+    margin-left: 127px;
+  }
+  #disliks {
+    margin-left: 106px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+  }
+  
+  /* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(255, 255, 255);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border: solid rgb(255, 193, 47) 2px;
+    border-radius: 17px;
+  }
+  
+  input:checked + .slider {
+    background-color: rgb(255, 193, 47); 
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px rgb(255, 193, 47);
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(28px);
+    -ms-transform: translateX(28px);
+    transform: translateX(28px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  #images {
+    width: 90%;
+  }
+
+  .labelfordownload {
+    display: inline-block;
+  }
+
+  .hidden {
+    opacity: 0;
+  }
+
+  form img {
+    height: 64px;
+    order: 1;
+}   
+  
