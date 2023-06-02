@@ -23,21 +23,24 @@
         {{end}}
 
         {{with .Post}}
-            {{if and $loggedin (eq $loggedUser.ID .ID)}}
-                <div>
-                    <label for="p-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload" >Download</label>
-                    <input
-                        type="file"
-                        class="hidden image_uploads"
-                        id="p-{{.ID}}-image_uploads" 
-                        messageType="p" messageID="{{.ID}}" 
-                        name="images"
-                        accept=".jpg, .jpeg, .png, svg, gif, bmp"
-                        onclick="imageDownload(this.id)"/>
-                </div>
-                <div id="p-{{.ID}}-preview" class="preview">
-                    <p>No files currently selected for upload</p>
-                </div>
+            {{if and $loggedin (eq $loggedUser.ID .Message.Author.ID)}}
+                <form id="editpost-{{.ID}}" class="post" method="post" enctype="multipart/form-data" onsubmit="validateEditPost(event)">
+                    <div>
+                        <label for="p-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload">Download</label>
+                        <input
+                            type="file"
+                            class="hidden image_uploads"
+                            id="p-{{.ID}}-image_uploads" 
+                            messageType="p" messageID="{{.ID}}" 
+                            name="images"
+                            accept=".jpg, .jpeg, .png, svg, gif, bmp"
+                            multiple/>
+                    </div>
+                    <div id="p-{{.ID}}-preview" class="preview">
+                        <p></p>
+                    </div>
+                    <button id="submitpost-{{.ID}}" class="signinupformbutton">Submit</button>   
+                </form>
             {{end}}
         {{end}}
 
@@ -68,21 +71,25 @@
                 </div>
             </div>
 
-             {{if and $loggedin (eq $loggedUser.ID .ID)}}
-                <div>
-                    <label for="c-{{.ID}}-image_upload"  class="signinupformbutton labelfordownload"  onclick="imageDownload(this.id)">Download</label>
-                    <input
-                        type="file"
-                        class="hidden image_uploads"
-                        id="c-{{.ID}}-image_uploads" 
-                        messageType="c" messageID="{{.ID}}" 
-                        name="images"
-                        accept=".jpg, .jpeg, .png, svg, gif, bmp"
-                        />
-                </div>
-                <div id="c-{{.ID}}-preview" class="preview">
-                    <p>No files currently selected for upload</p>
-                </div>
+            {{if and $loggedin (eq $loggedUser.ID .Message.Author.ID)}}
+                <form id="editcomment-{{.ID}}" class="post" method="post" enctype="multipart/form-data" onsubmit="validateEditComment(event)">
+               
+                    <div>
+                        <label for="c-{{.ID}}-image_upload"  class="signinupformbutton labelfordownload">Download</label>
+                        <input
+                            type="file"
+                            class="hidden image_uploads"
+                            id="c-{{.ID}}-image_uploads" 
+                            messageType="c" messageID="{{.ID}}" 
+                            name="images"
+                            accept=".jpg, .jpeg, .png, svg, gif, bmp"
+                            multiple/>
+                    </div>
+                    <div id="c-{{.ID}}-preview" class="preview">
+                        <p></p>
+                    </div>
+                    <button id="submitcomment-{{.ID}}" class="signinupformbutton">Submit</button>   
+                </form>
             {{end}}
     
             <div id="reactions">

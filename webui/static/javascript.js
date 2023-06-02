@@ -133,27 +133,41 @@ function handleLike(id) {
     });
 }
 
-function imageDownload(id) {
+function validateEditPost(event) {
   // needed : "messageType"("p", "c") "messageID"(#) 
-  const clickedElement = document.getElementById(id);
+  const submittedForm = document.getElementById(event.target.id);
 
-  const imageFile = clickedElement.files?.[0];
-  if (!imageFile) { return; }
+
+  event.preventDefault();
+  const imageFiles = submittedForm["images"]?.files;
+  if (imageFiles.length === 0) { return; }
+
+  // images validation
+  for (const file of imageFiles) {
+    const preview = submittedForm.querySelector(".preview p");
+    if (!validFileType(file)) {
+      preview.textContent = "invalid tipe of file";
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      preview.textContent = `file ${file.name} is too big`;
+      return;
+    }
+  }
   // create a request
 
-  const formData = new FormData();
+  const formData = new FormData(submittedForm);
+  console.log("fd=", formData.get('images'));
 
-  formData.append("messageType", clickedElement.getAttribute("messageType"));
-  formData.messageID("accountnum", clickedElement.getAttribute("messageID"));
+  formData.append("messageType", submittedForm["images"].getAttribute("messageType"));
+  formData.append("messageID", submittedForm["images"].getAttribute("messageID"));
 
-  // HTML file input, chosen by user
-  formData.append("imagefile", imageFile);
-
+  headers.append('Content-Type', 'multipart/form-data');
 
   // send the POST request to the server
-  fetch("/imagedownload", {
+  fetch("/postedit", {
     method: "POST",
-    // headers: headers,
+    headers: headers,
     credentials: "same-origin",
     redirect: "error",
     body: formData
@@ -161,12 +175,15 @@ function imageDownload(id) {
     if (!res.ok) {
       throw new Error(`HTTP error! Status: ${res.status}`);
     }
-    return res.text();
-  }).then((fileUrl) => {
+    return res.json();
+  }).then((messageJSON) => {
+    const message = JSON.parse(messageJSON);
     const imageDiv = document.getElementById("images");
-    const img = document.createElement('img');
-    img.setAttribute("src", fileUrl);
-    imageDiv.appendChild(img);
+    for (const image of message.Images) {
+      let img = document.createElement('img');
+      img.setAttribute("src", image);
+      imageDiv.appendChild(img);
+    }
   });
 }
 

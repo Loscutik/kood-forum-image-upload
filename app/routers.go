@@ -22,6 +22,7 @@ func routers(app *application.Application) *http.ServeMux {
 	mux.Handle("/post/create", handlers.PostCreatorHandler(app))
 	mux.Handle("/liking", handlers.LikingHandler(app))
 	mux.Handle("/logout", handlers.LogoutHandler(app))
+	mux.Handle("/postedit", handlers.PostEditHandler(app))
 
 	fileServer := http.FileServer(http.Dir(templates.STATIC_PATH))
 	mux.Handle("/static/", http.StripPrefix("/static/", fileServer))

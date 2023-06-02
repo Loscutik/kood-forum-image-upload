@@ -138,7 +138,7 @@ func (f *ForumModel) GetPostByID(id int) (*model.Post, error) {
 		if err != nil {
 			return nil, err
 		}
-		comment.Message.Images=getImagesArray(images)
+		comment.Message.Images = getImagesArray(images)
 		post.Comments = append(post.Comments, comment)
 	}
 
@@ -151,9 +151,12 @@ func (f *ForumModel) GetPostByID(id int) (*model.Post, error) {
 	return post, nil
 }
 
-func getImagesArray(imagesStr sql.NullString)[]string{
-	if(imagesStr.Valid){
-		return strings.Split(imagesStr.String,",")
+/*
+convert string containing a list of images file names to an array
+*/
+func getImagesArray(imagesStr sql.NullString) []string {
+	if imagesStr.Valid {
+		return strings.Split(imagesStr.String, ",")
 	}
 	return nil
 }
@@ -179,7 +182,7 @@ func rowScanForPostByID(rows *sql.Rows) (*model.Post, *model.Category, error) {
 		&post.Message.Likes[model.LIKE], &post.Message.Likes[model.DISLIKE],
 	)
 
-	post.Message.Images=getImagesArray(images)
+	post.Message.Images = getImagesArray(images)
 
 	return post, category, err
 }
@@ -325,7 +328,7 @@ func rowScanForPosts(rows *sql.Rows) (*model.Post, *model.Category, *model.User,
 		&post.CommentsQuantity,
 		&post.Message.Likes[model.LIKE], &post.Message.Likes[model.DISLIKE],
 	)
-	post.Message.Images=getImagesArray(images)
+	post.Message.Images = getImagesArray(images)
 
 	return post, category, author, err
 }
@@ -344,4 +347,34 @@ func addNewPostStruct(posts *[]*model.Post, post *model.Post, category *model.Ca
 		(*authors)[author.ID] = author
 	}
 	*posts = append(*posts, post)
+}
+
+func (f *ForumModel) ModifyPost(id int, theme, content string, images []string) error {
+	fields := ""
+	fieldsValues := []any{}
+	if theme != "" {
+		fields += "theme=?, "
+		fieldsValues = append(fieldsValues, theme)
+	}
+	if content != "" {
+		fields += "content=?, "
+		fieldsValues = append(fieldsValues, content)
+	}
+	if len(images) != 0 {
+		fields += "images=?, "
+		fieldsValues = append(fieldsValues, strings.Join(images, ","))
+	}
+	_, ok := strings.CutSuffix(fields, ", ")
+	if !ok {
+		panic("cant cut the , after fields list in func modufyPost")
+	}
+	fieldsValues = append(fieldsValues, id)
+
+	q := fmt.Sprintf("UPDATE posts SET %s WHERE id=?", fields)
+	_, err := f.DB.Exec(q, fieldsValues...)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

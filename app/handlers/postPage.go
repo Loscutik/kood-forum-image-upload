@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -119,7 +120,7 @@ func PostPageHandler(app *application.Application) http.HandlerFunc {
 			}
 			err = os.RemoveAll(imagesTmpDir)
 			if err != nil {
-				app.ErrLog.Printf("cannot remove directory %s", imagesTmpDir) 
+				app.ErrLog.Printf("cannot remove directory %s", imagesTmpDir)
 			}
 
 		}
@@ -156,6 +157,149 @@ func PostPageHandler(app *application.Application) http.HandlerFunc {
 		if err != nil {
 			ServerError(app, w, r, "tamplate executing faild", err)
 			return
+		}
+	}
+}
+
+/*
+the editing handler. Route: /postedit. Methods: POST. Template: -
+*/
+func PostEditHandler(app *application.Application) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// only POST method is allowed
+		if r.Method != http.MethodPost {
+			MethodNotAllowed(app, w, r, http.MethodPost)
+			return
+		}
+
+		// get a session
+		ses, err := checkLoggedin(app, w, r)
+		if err != nil {
+			// checkLoggedin has already written an error status to w
+			return
+		}
+
+		// only for authorisated
+		if ses.LoginStatus == experied {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+		if ses.LoginStatus == notloggedin {
+			Forbidden(app, w, r)
+			return
+		}
+
+		// continue for the loggedin status only
+		// get data from the request
+		if err := r.ParseMultipartForm(MaxUploadSize); err != nil {
+			ServerError(app, w, r, "Cannot parse multipart form", err)
+			return
+		}
+
+		dateCreate := time.Now()
+		messageType := r.PostFormValue("messageType")
+		messageID := r.PostFormValue("messageID")
+		// theme := r.PostFormValue(F_THEME)
+		// content := r.PostFormValue(F_CONTENT)
+
+		imageFiles := r.MultipartForm.File[F_IMAGES]
+
+		imagesTmpDir := path.Join(USER_IMAGES_DIR, fmt.Sprintf("tmp_%d%d_%d", dateCreate.Second(), dateCreate.Nanosecond(), rand.Intn(100)))
+		if imageFiles != nil {
+			err := os.Mkdir(imagesTmpDir, 0o777)
+			if err != nil && !os.IsExist(err) {
+				ServerError(app, w, r, "Can't create tmp directory", err)
+				return
+			}
+		}
+
+		var imagesList []string
+		for _, fileHeader := range imageFiles {
+			newFileName, err := uploadFile(MaxFileUploadSize, fileHeader, imagesTmpDir)
+			imagesList = append(imagesList, newFileName)
+			if err != nil {
+				ServerError(app, w, r, "Can't upload the file", err)
+				return
+			}
+		}
+		/*
+			authorID, err := strconv.Atoi(r.PostFormValue(F_AUTHORID))
+			if err != nil || authorID < 1 {
+				ClientError(app, w, r, http.StatusBadRequest, fmt.Sprintf("A comment creating is faild: wrong athor id: %s, err: %s", r.PostFormValue(F_AUTHORID), err))
+				return
+			}
+
+			if strings.TrimSpace(content) == "" && len(imagesList) == 0 {
+				ClientError(app, w, r, http.StatusBadRequest, "comment creating failed: empty data")
+				return
+			}
+		*/
+		id, err := strconv.Atoi(messageID)
+		if err != nil || id < 1 {
+			ClientError(app, w, r, http.StatusBadRequest, fmt.Sprintf("edit message failed: wrong message id %s, err: %v", messageID, err))
+			return
+		}
+		// save to DB
+		if messageType == "p" {
+			// get the post from DB
+			post, err := app.ForumData.GetPostByID(id)
+			if err != nil {
+				ServerError(app, w, r, "getting a post faild", err)
+				return
+			}
+			imagesList = append(post.Message.Images, imagesList...)
+			err = app.ForumData.ModifyPost(id, "", "", imagesList)
+			if err != nil {
+				ServerError(app, w, r, "saving  post changes to DB failed", err)
+				return
+			}
+		}
+
+		postsImagesDir := path.Join(USER_IMAGES_DIR, fmt.Sprintf("p%d", id))
+		err = os.Mkdir(postsImagesDir, 0o777)
+		if err != nil && !os.IsExist(err) {
+			ServerError(app, w, r, fmt.Sprintf("Can't create directory %s", postsImagesDir), err)
+			return
+		}
+		for _, imageName := range imagesList {
+			err = os.Rename(path.Join(imagesTmpDir, imageName), path.Join(postsImagesDir, imageName))
+			if err != nil {
+				ServerError(app, w, r, fmt.Sprintf("failed renaming file in the tmp path to %s", path.Join(postsImagesDir, imageName)), err)
+				return
+			}
+		}
+		err = os.RemoveAll(imagesTmpDir)
+		if err != nil {
+			app.ErrLog.Printf("cannot remove directory %s", imagesTmpDir)
+		}
+
+		// get the updated post from DB
+		if messageType == "p" {
+
+			post, err := app.ForumData.GetPostByID(id)
+			if err != nil {
+				ServerError(app, w, r, "getting a post faild", err)
+				return
+			}
+			for i, imageName := range post.Message.Images {
+				post.Message.Images[i] = path.Join("/", postsImagesDir, imageName)
+			}
+
+			// write responce in JSON
+			output := struct {
+				Theme, Content string
+				Images         []string
+			}{post.Theme, post.Message.Content, post.Message.Images}
+			
+			w.Header().Set("Content-Type", "application.Application/json")
+			
+			jsonOutput, err := json.Marshal(output)
+			if err != nil {
+				ServerError(app, w, r, "failed marshaling output data", err)
+				return
+			}
+			
+			w.Write(jsonOutput)
 		}
 	}
 }

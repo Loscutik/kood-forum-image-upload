@@ -43,22 +43,22 @@ func LikingHandler(app *application.Application) http.HandlerFunc {
 			return
 		}
 
-		// get a session
-		ses, err := checkLoggedin(app, w, r)
-		if err != nil {
-			// checkLoggedin has already written an error status to w
-			return
-		}
+			// get a session
+			ses, err := checkLoggedin(app, w, r)
+			if err != nil {
+				// checkLoggedin has already written an error status to w
+				return
+			}
 
-		// only for authorisated
-		if ses.LoginStatus == experied {
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
-			return
-		}
-		if ses.LoginStatus == notloggedin {
-			Forbidden(app, w, r)
-			return
-		}
+			// only for authorisated
+			if ses.LoginStatus == experied {
+				http.Redirect(w, r, "/login", http.StatusSeeOther)
+				return
+			}
+			if ses.LoginStatus == notloggedin {
+				Forbidden(app, w, r)
+				return
+			}
 
 		// continue for the loggedin status only
 		// get data from the request
