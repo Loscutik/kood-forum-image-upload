@@ -14,8 +14,13 @@ import (
 inserts a new post into DB, returns an ID for the post
 */
 func (f *ForumModel) InsertPost(theme, content string, images []string, authorID int, dateCreate time.Time, categoriesID []int) (int, error) {
+	var strOfImages sql.NullString
+	if len(images) != 0 {
+		strOfImages.String = strings.Join(images, ",")
+		strOfImages.Valid=true
+	}
 	q := `INSERT INTO posts (theme, content, images, authorID, dateCreate) VALUES (?,?,?,?,?)`
-	res, err := f.DB.Exec(q, theme, content, strings.Join(images, ","), authorID, dateCreate)
+	res, err := f.DB.Exec(q, theme, content, strOfImages, authorID, dateCreate)
 	if err != nil {
 		return 0, err
 	}
@@ -156,7 +161,16 @@ convert string containing a list of images file names to an array
 */
 func getImagesArray(imagesStr sql.NullString) []string {
 	if imagesStr.Valid {
-		return strings.Split(imagesStr.String, ",")
+		imagesNames:=strings.Split(imagesStr.String, ",")
+		for i := 0; i < len(imagesNames)-1; i++ {
+			if imagesNames[i] == ""{
+				imagesNames=append(imagesNames[:i],imagesNames[i+1,] )
+			}
+		}
+		if imagesNames[len(imagesNames)-1] == ""{
+			imagesNames=imagesNames[:len(imagesNames)-1]
+		}
+		return imagesNames
 	}
 	return nil
 }

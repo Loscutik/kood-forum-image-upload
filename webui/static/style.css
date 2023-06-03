@@ -535,7 +535,7 @@ a {
   }
 
   .images {
-    width: 90%;
+    width: 100%;
   }
 
   .labelfordownload {
@@ -553,5 +553,9 @@ a {
     order: 1;
 }   
 
+.images img {
+    width: 500px;
+    margin: 5px 80px;
+}
 
   

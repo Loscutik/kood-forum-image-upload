@@ -18,7 +18,7 @@ const (
 	F_CATEGORIESID = "categoriesID"
 )
 
-const USER_IMAGES_DIR   = "./images"
+const USER_IMAGES_DIR = "./images"
 
 const (
 	MaxFileUploadSize = 20 << 20               // 20MB

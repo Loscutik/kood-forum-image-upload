@@ -35,7 +35,7 @@ func uploadFile(maxFileUploadSize int64, fileHeader *multipart.FileHeader, pathT
 	if err != nil {
 		return "", err
 	}
-
+	
 	defer file.Close()
 
 	fileBytes, err := io.ReadAll(file)

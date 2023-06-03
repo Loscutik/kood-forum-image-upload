@@ -136,8 +136,6 @@ function handleLike(id) {
 function validateEditPost(event) {
   // needed : "messageType"("p", "c") "messageID"(#) 
   const submittedForm = document.getElementById(event.target.id);
-
-
   event.preventDefault();
   const imageFiles = submittedForm["images"]?.files;
   if (imageFiles.length === 0) { return; }
@@ -146,18 +144,20 @@ function validateEditPost(event) {
   const preview = submittedForm.querySelector(".preview");
   for (const file of imageFiles) {
     if (!validFileType(file)) {
-      preview.textContent = "invalid tipe of file";
+      preview.textContent = "invalid type of file";
+      preview.style.color = "red";
       return;
     }
     if (file.size > 2 * 1024 * 1024) {
       preview.textContent = `file ${file.name} is too big`;
+      preview.style.color = "red";
       return;
     }
   }
-  preview.innerHTML =''
+  preview.innerHTML = ''
 
   // create a request
-  const formData = new FormData(submittedForm);
+  let formData = new FormData(submittedForm);
 
   formData.append("messageType", submittedForm["images"].getAttribute("messageType"));
   formData.append("messageID", submittedForm["images"].getAttribute("messageID"));
@@ -167,7 +167,7 @@ function validateEditPost(event) {
   // send the POST request to the server
   fetch("/postedit", {
     method: "POST",
-   // headers: headers,
+    // headers: headers,
     credentials: "same-origin",
     redirect: "error",
     body: formData
@@ -189,6 +189,8 @@ function validateEditPost(event) {
       imageDiv.appendChild(img);
     }
   });
+  submittedForm.reset();
+
 }
 
 function darkness() {
@@ -325,19 +327,36 @@ function validatePost() {
     document.getElementById("PostTopic").style.borderRadius = "3px";
     document.getElementById("PostTopic").placeholder = "Please enter the topic!";
   }
-  if (y.trim() == "") {
+
+  const inputImages = document.getElementById('image_uploads');
+
+  const curFiles = inputImages.files;
+
+  for (const file of curFiles) {
+    if (!validFileType(file)) {
+      const preview = document.forms["pform"].querySelector(".preview");
+      preview.textContent = "invalid type of file";
+      preview.style.color = "red";
+      return false;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      const preview = document.forms["pform"].querySelector(".preview");
+      preview.textContent = `file ${file.name} is too big`;
+      preview.style.color = "red";
+      return false;
+    }
+  }
+
+  if (y.trim() == "" && curFiles.length === 0) {
     document.getElementById("textarea_newpost").style.border = "solid 2px";
     document.getElementById("textarea_newpost").style.borderColor = "rgb(232, 0, 0)";
     document.getElementById("textarea_newpost").style.borderRadius = "3px";
     document.getElementById("textarea_newpost").placeholder = "Please enter the text!";
-  }
-
-  if (x.trim() == "" || y.trim() == "") {
     return false
   }
-  else {
-    return true
-  }
+  return true
+
+
 }
 
 function CheckValidatePost() {
@@ -376,7 +395,6 @@ document.addEventListener('DOMContentLoaded', function () {
   let pform = document.getElementById("pform")
   if (pform) {
     document.getElementById("pform").addEventListener("submit", function (ev) {
-      console.log(ev.target)
       ev.preventDefault();
       if (validatePost() && CheckCheckBox()) {
         ev.target.submit();
@@ -411,24 +429,31 @@ function validateComment() {
   const inputImages = document.getElementById('image_uploads');
 
   const curFiles = inputImages.files;
-  let isImagesValide = true;
 
   for (const file of curFiles) {
-    if (!validFileType(file) || file.size > 2 * 1024 * 1024) {
-      isImagesValide = false;
-      break;
+    if (!validFileType(file)) {
+      const preview = document.forms["writecomment"].querySelector(".preview");
+      preview.textContent = "invalid type of file";
+      preview.style.color = "red";
+      return false;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      const preview = document.forms["writecomment"].querySelector(".preview");
+      preview.textContent = `file ${file.name} is too big`;
+      preview.style.color = "red";
+      return false;
     }
   }
 
-  if ((z.trim() == "" && curFiles.length === 0) || !isImagesValide) {
+  if (z.trim() == "" && curFiles.length === 0) {
     document.getElementById("newcomment").style.border = "solid 2px";
     document.getElementById("newcomment").style.borderColor = "rgb(232, 0, 0)";
     document.getElementById("newcomment").style.borderRadius = "3px";
     document.getElementById("newcomment").placeholder = "Can't submit an empty comment";
     return false
-  } else {
-    return true
   }
+  
+  return true
 }
 
 function checkComment() {
@@ -451,6 +476,7 @@ function updateImageDisplay(event) {
   const targetElmID = event.target.id;
   const input = document.getElementById(targetElmID);
   const preview = document.getElementById(targetElmID.replace('image_uploads', 'preview'));
+  preview.removeAttribute('style');
   while (preview.firstChild) {
     preview.removeChild(preview.firstChild);
   }

@@ -102,21 +102,24 @@ func PostCreatorHandler(app *application.Application) http.HandlerFunc {
 		imageFiles := r.MultipartForm.File[F_IMAGES]
 
 		imagesTmpDir := path.Join(USER_IMAGES_DIR, fmt.Sprintf("tmp_%d%d_%d", dateCreate.Second(), dateCreate.Nanosecond(), rand.Intn(100)))
-		if imageFiles != nil {
+		if len(imageFiles) > 0 {
 			err := os.Mkdir(imagesTmpDir, 0o777)
 			if err != nil && !os.IsExist(err) {
 				ServerError(app, w, r, "Can't create tmp directory", err)
 				return
 			}
 		}
+
+		fmt.Printf("img files to insert to post %#v - %#v\n", len(imageFiles), imageFiles)
 		var imagesList []string
 		for _, fileHeader := range imageFiles {
 			newFileName, err := uploadFile(MaxFileUploadSize, fileHeader, imagesTmpDir)
-			imagesList = append(imagesList, newFileName)
+			fmt.Printf("img name to insert to post %#v \n", newFileName)
 			if err != nil {
-				ServerError(app, w, r, "Can't upload the file", err)
+				ClientError(app, w, r, http.StatusBadRequest, fmt.Sprintf("Can't upload the file, err: %v", err))
 				return
 			}
+			imagesList = append(imagesList, newFileName)
 
 		}
 
@@ -141,6 +144,7 @@ func PostCreatorHandler(app *application.Application) http.HandlerFunc {
 			ClientError(app, w, r, http.StatusBadRequest, "post creating failed: empty data")
 			return
 		}
+		fmt.Printf("img list to insert to post %#v\n", len(imagesList))
 
 		// add post to the DB
 		id, err := app.ForumData.InsertPost(theme, content, imagesList, authorID, dateCreate, categoriesID)
@@ -149,24 +153,25 @@ func PostCreatorHandler(app *application.Application) http.HandlerFunc {
 			return
 		}
 
-		postsImagesDir := path.Join(USER_IMAGES_DIR, fmt.Sprintf("p%d", id))
-		err = os.Mkdir(postsImagesDir, 0o777)
-		if err != nil && !os.IsExist(err) {
-			ServerError(app, w, r, fmt.Sprintf("Can't create directory %s", postsImagesDir), err)
-			return
-		}
-		for _, imageName := range imagesList {
-			err = os.Rename(path.Join(imagesTmpDir, imageName), path.Join(postsImagesDir, imageName))
-			if err != nil {
-				ServerError(app, w, r, fmt.Sprintf("failed renaming file in the tmp path to %s", path.Join(postsImagesDir, imageName)), err)
+		if len(imageFiles) > 0 {
+			postsImagesDir := path.Join(USER_IMAGES_DIR, fmt.Sprintf("p%d", id))
+			err = os.Mkdir(postsImagesDir, 0o777)
+			if err != nil && !os.IsExist(err) {
+				ServerError(app, w, r, fmt.Sprintf("Can't create directory %s", postsImagesDir), err)
 				return
 			}
+			for _, imageName := range imagesList {
+				err = os.Rename(path.Join(imagesTmpDir, imageName), path.Join(postsImagesDir, imageName))
+				if err != nil {
+					ServerError(app, w, r, fmt.Sprintf("failed renaming file in the tmp path to %s", path.Join(postsImagesDir, imageName)), err)
+					return
+				}
+			}
+			err = os.RemoveAll(imagesTmpDir)
+			if err != nil {
+				app.ErrLog.Printf("cannot remove directory %s", imagesTmpDir)
+			}
 		}
-		err = os.RemoveAll(imagesTmpDir)
-		if err != nil {
-			app.ErrLog.Printf("cannot remove directory %s", imagesTmpDir)
-		}
-
 		// redirect to the post page
 		http.Redirect(w, r, "/post/p"+strconv.Itoa(id), http.StatusSeeOther)
 	}

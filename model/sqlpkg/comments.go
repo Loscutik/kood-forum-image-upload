@@ -14,12 +14,17 @@ import (
 inserts a new comment into DB, returns an ID for the comment
 */
 func (f *ForumModel) InsertComment(postID int, content string, images []string, authorID int, dateCreate time.Time) (int, error) {
+	var strOfImages sql.NullString
+	
+	if len(images) != 0 {
+		strOfImages.String = strings.Join(images, ",")
+		strOfImages.Valid=true
+	}
 	q := `INSERT INTO comments (content, images, authorID, dateCreate, postID) VALUES (?,?,?,?,?)`
-	res, err := f.DB.Exec(q, content, strings.Join(images, ","), authorID, dateCreate, postID)
+	res, err := f.DB.Exec(q, content, strOfImages, authorID, dateCreate, postID)
 	if err != nil {
 		return 0, err
 	}
-
 	commentID, err := res.LastInsertId()
 	if err != nil {
 		return 0, err
