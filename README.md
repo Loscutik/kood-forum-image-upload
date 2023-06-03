@@ -1,4 +1,4 @@
-# Project name: FORUM
+# Project name: forum-image-upload
 
 This is a project of a web forum, which contains such things as:
 
@@ -6,12 +6,21 @@ This is a project of a web forum, which contains such things as:
 * creating user accounts
 * password hashing
 * usage of cookies and user sessions
+* uploading images
 * ...and other cool things
 
-Before we start, here you can find the [audit](https://github.com/01-edu/public/tree/master/subjects/forum/audit) questions. Are you ready? Let's go!
+Before we start, here you can find the [audit](https://github.com/01-edu/public/blob/master/subjects/forum/image-upload/audit.md) questions. Are you ready? Let's go!
 
 ## How to run the app?
 
+### short words
+I'm sure you know how to use forum :)
+I just want to say that in this version of the app you can upload images when you create a new post or comment and also into the alredy created posts/comments.
+You can test it in two ways:
+- with docker: you can use `./docker.sh`
+- without docker: run a command `go run ./app` it will use the port 8080 or  `go run ./app --port=<number>` if you prefer  another port 
+
+### long read
 The project requires Docker, so if you have no Docker on your computer, you need to install it. To do it, please follow this [>>> LINK <<<](https://docs.docker.com/get-docker/). You may also need to install the Docker extension to your VS Code if you use it. Please hold the Docker app opened while you launch the forum project.
 
 The next step is very easy - please open the "forum" folder using your terminal, and run the file named "docker.sh". On a Windows PC, you can do it by using the command `bash docker.sh`, and you can use a command `./docker.sh` for Linux. This will launch a script which will do all the rest needed things to unpack and open the forum.

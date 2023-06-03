@@ -34,7 +34,7 @@
             {{if and $loggedin (eq $loggedUser.ID .Message.Author.ID)}}
                 <form id="editpost-{{.ID}}" class="post" method="post" enctype="multipart/form-data" onsubmit="validateEditPost(event)">
                     <div>
-                        <label for="p-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload">Download</label>
+                        <label for="p-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload">Upload</label>
                         <button id="submitpost-{{.ID}}" class="signinupformbutton submitcomment">Submit</button>
                         <input
                             type="file"
@@ -79,7 +79,7 @@
                 <form id="editcomment-{{.ID}}" class="post" method="post" enctype="multipart/form-data" onsubmit="validateEditPost(event)">
                
                     <div>
-                        <label for="c-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload">Download</label>
+                        <label for="c-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload">Upload</label>
                         <button id="submitcomment-{{.ID}}" class="signinupformbutton submitcomment">Submit</button>   
                         <input
                             type="file"
@@ -103,7 +103,7 @@
             <input id="invisible" name="authorID" value="{{.Session.User.ID}}"></input>
             <textarea id="newcomment" name="content" placeholder="Write your comment..." onclick="checkComment()"></textarea>
             <div>
-                <label for="image_uploads"  class="signinupformbutton labelfordownload" >Download</label>
+                <label for="image_uploads"  class="signinupformbutton labelfordownload" >Upload</label>
                 <button id="submitcomment" class="signinupformbutton submitcomment">Submit</button>
                 <input
                     type="file"

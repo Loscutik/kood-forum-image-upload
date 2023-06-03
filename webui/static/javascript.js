@@ -148,7 +148,7 @@ function validateEditPost(event) {
       preview.style.color = "red";
       return;
     }
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 20 * 1024 * 1024) {
       preview.textContent = `file ${file.name} is too big`;
       preview.style.color = "red";
       return;
@@ -339,7 +339,7 @@ function validatePost() {
       preview.style.color = "red";
       return false;
     }
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 20 * 1024 * 1024) {
       const preview = document.forms["pform"].querySelector(".preview");
       preview.textContent = `file ${file.name} is too big`;
       preview.style.color = "red";
@@ -437,7 +437,7 @@ function validateComment() {
       preview.style.color = "red";
       return false;
     }
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 20 * 1024 * 1024) {
       const preview = document.forms["writecomment"].querySelector(".preview");
       preview.textContent = `file ${file.name} is too big`;
       preview.style.color = "red";
@@ -494,7 +494,7 @@ function updateImageDisplay(event) {
       const listItem = document.createElement('li');
       const para = document.createElement('p');
       if (validFileType(file)) {
-        if (file.size > 2 * 1024 * 1024) {
+        if (file.size > 20 * 1024 * 1024) {
           para.textContent = 'file is too big';
         } else {
           para.textContent = `File name ${file.name}, file size ${returnFileSize(file.size)}.`;
