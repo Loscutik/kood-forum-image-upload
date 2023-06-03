@@ -143,8 +143,8 @@ function validateEditPost(event) {
   if (imageFiles.length === 0) { return; }
 
   // images validation
+  const preview = submittedForm.querySelector(".preview");
   for (const file of imageFiles) {
-    const preview = submittedForm.querySelector(".preview p");
     if (!validFileType(file)) {
       preview.textContent = "invalid tipe of file";
       return;
@@ -154,20 +154,20 @@ function validateEditPost(event) {
       return;
     }
   }
-  // create a request
+  preview.innerHTML =''
 
+  // create a request
   const formData = new FormData(submittedForm);
-  console.log("fd=", formData.get('images'));
 
   formData.append("messageType", submittedForm["images"].getAttribute("messageType"));
   formData.append("messageID", submittedForm["images"].getAttribute("messageID"));
-
-  headers.append('Content-Type', 'multipart/form-data');
+  // const headers = new Headers();
+  // headers.append('Content-Type', 'multipart/form-data; boundary=-----boundaryKfdfkmth');
 
   // send the POST request to the server
   fetch("/postedit", {
     method: "POST",
-    headers: headers,
+   // headers: headers,
     credentials: "same-origin",
     redirect: "error",
     body: formData
@@ -176,11 +176,15 @@ function validateEditPost(event) {
       throw new Error(`HTTP error! Status: ${res.status}`);
     }
     return res.json();
-  }).then((messageJSON) => {
-    const message = JSON.parse(messageJSON);
-    const imageDiv = document.getElementById("images");
+  }).then((message) => {
+    const imageDiv = submittedForm.parentNode.querySelector(".images");
+    while (imageDiv.firstChild) {
+      imageDiv.removeChild(imageDiv.firstChild);
+    }
     for (const image of message.Images) {
+      // del images
       let img = document.createElement('img');
+      // create images
       img.setAttribute("src", image);
       imageDiv.appendChild(img);
     }

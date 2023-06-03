@@ -349,6 +349,9 @@ func addNewPostStruct(posts *[]*model.Post, post *model.Post, category *model.Ca
 	*posts = append(*posts, post)
 }
 
+/*
+modify a post with the given id
+*/
 func (f *ForumModel) ModifyPost(id int, theme, content string, images []string) error {
 	fields := ""
 	fieldsValues := []any{}
@@ -364,7 +367,7 @@ func (f *ForumModel) ModifyPost(id int, theme, content string, images []string) 
 		fields += "images=?, "
 		fieldsValues = append(fieldsValues, strings.Join(images, ","))
 	}
-	_, ok := strings.CutSuffix(fields, ", ")
+	fields, ok := strings.CutSuffix(fields, ", ")
 	if !ok {
 		panic("cant cut the , after fields list in func modufyPost")
 	}

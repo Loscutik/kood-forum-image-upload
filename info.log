@@ -442,3 +442,34 @@ INFO:  2023/06/02 15:46:58 main.go:73: Starting server at port 8080
 INFO:  2023/06/02 15:51:33 main.go:73: Starting server at port 8080
 INFO:  2023/06/02 16:02:27 main.go:73: Starting server at port 8080
 INFO:  2023/06/02 20:21:25 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 20:22:56 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 20:30:02 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 20:34:08 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 20:34:32 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 20:43:05 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 20:44:58 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 20:49:50 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 20:59:39 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 21:03:36 config.go:53: DB has been created
+INFO:  2023/06/02 21:03:36 config.go:66: DB has been filled by examles of data
+INFO:  2023/06/02 21:03:36 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 21:31:05 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 21:33:30 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 21:37:34 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 21:45:18 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 21:56:57 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 22:00:56 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 22:04:49 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 22:19:12 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 22:31:29 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 22:55:23 config.go:53: DB has been created
+INFO:  2023/06/02 22:55:23 config.go:66: DB has been filled by examles of data
+INFO:  2023/06/02 22:55:23 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 23:02:34 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 23:35:02 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 23:40:08 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 23:46:32 main.go:73: Starting server at port 8080
+INFO:  2023/06/02 23:52:30 main.go:73: Starting server at port 8080
+INFO:  2023/06/03 00:00:33 main.go:73: Starting server at port 8080
+INFO:  2023/06/03 00:08:31 main.go:73: Starting server at port 8080
+INFO:  2023/06/03 00:13:30 main.go:73: Starting server at port 8080

@@ -14,19 +14,28 @@
             <div id="{{.ID}}-content" class="post-content">
                 <p><b>{{.Theme}}</b></p>
                 <p>{{.Message.Content}}</p>
-                <div id="images">
+                <div class="images">
                     {{range .Message.Images}}
                         <img src="{{.}}"/>
                     {{end}}
                 </div>
             </div>
         {{end}}
-
         {{with .Post}}
+            <div id="reactions">
+                {{if $loggedin}}
+                    <span id="{{.ID}}-posts_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-posts_likes-true" messageID="{{.ID}}" messageType="{{$likesPost}}" like="true" class="likeicon" name="post-true" onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
+                    <span id="{{.ID}}-posts_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-posts_likes-false" messageID="{{.ID}}" messageType="{{$likesPost}}" like="false" class="likeicon" name="post-false" onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></button>
+                {{else}} 
+                    <span id="{{.ID}}-posts_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-posts_likes-true" class="likeicon not-active-link" name="post-true"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
+                    <span id="{{.ID}}-posts_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-posts_likes-false" class="likeicon not-active-link" name="post-false"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></img></button>
+                {{end}}
+            </div>
             {{if and $loggedin (eq $loggedUser.ID .Message.Author.ID)}}
                 <form id="editpost-{{.ID}}" class="post" method="post" enctype="multipart/form-data" onsubmit="validateEditPost(event)">
                     <div>
                         <label for="p-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload">Download</label>
+                        <button id="submitpost-{{.ID}}" class="signinupformbutton submitcomment">Submit</button>
                         <input
                             type="file"
                             class="hidden image_uploads"
@@ -39,24 +48,11 @@
                     <div id="p-{{.ID}}-preview" class="preview">
                         <p></p>
                     </div>
-                    <button id="submitpost-{{.ID}}" class="signinupformbutton">Submit</button>   
+                       
                 </form>
             {{end}}
         {{end}}
 
-        <div id="reactions">
-            {{if $loggedin}}
-                {{with .Post}}
-                    <span id="{{.ID}}-posts_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-posts_likes-true" messageID="{{.ID}}" messageType="{{$likesPost}}" like="true" class="likeicon" name="post-true" onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
-                    <span id="{{.ID}}-posts_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-posts_likes-false" messageID="{{.ID}}" messageType="{{$likesPost}}" like="false" class="likeicon" name="post-false" onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></button>
-                {{end}}
-            {{else}} 
-                {{with .Post}}
-                    <span id="{{.ID}}-posts_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-posts_likes-true" class="likeicon not-active-link" name="post-true"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
-                    <span id="{{.ID}}-posts_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-posts_likes-false" class="likeicon not-active-link" name="post-false"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></img></button>
-                {{end}}
-            {{end}}
-        </div>
     </div>
 
     {{range .Post.Comments}}
@@ -64,18 +60,27 @@
             <p class="post-id">#{{.ID}} by {{template "linkuser" .}} </p>
             <div id="{{.ID}}-comment-content" class="post-content">
                 <p>{{.Message.Content}}</p>
-                <div id="images">
+                <div class="images">
                     {{range .Message.Images}}
                         <img src="{{.}}"/>
                     {{end}}
                 </div>
             </div>
-
+            <div id="reactions">
+                {{if $loggedin}}
+                    <span id="{{.ID}}-comments_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-comments_likes-true" messageID="{{.ID}}" messageType="{{$likesComment}}" like="true" class="likeicon" name="comment-true"  onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
+                    <span id="{{.ID}}-comments_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-comments_likes-false" messageID="{{.ID}}" messageType="{{$likesComment}}" like="false" class="likeicon" name="comment-false"  onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></button>
+                {{else}} 
+                    <span id="{{.ID}}-comments_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-comments_likes-true" class="likeicon not-active-link" name="comment-true"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
+                    <span id="{{.ID}}-comments_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-comments_likes-false" class="likeicon not-active-link" name="comment-false"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></img></button>
+                {{end}}
+            </div>
             {{if and $loggedin (eq $loggedUser.ID .Message.Author.ID)}}
-                <form id="editcomment-{{.ID}}" class="post" method="post" enctype="multipart/form-data" onsubmit="validateEditComment(event)">
+                <form id="editcomment-{{.ID}}" class="post" method="post" enctype="multipart/form-data" onsubmit="validateEditPost(event)">
                
                     <div>
-                        <label for="c-{{.ID}}-image_upload"  class="signinupformbutton labelfordownload">Download</label>
+                        <label for="c-{{.ID}}-image_uploads"  class="signinupformbutton labelfordownload">Download</label>
+                        <button id="submitcomment-{{.ID}}" class="signinupformbutton submitcomment">Submit</button>   
                         <input
                             type="file"
                             class="hidden image_uploads"
@@ -88,19 +93,9 @@
                     <div id="c-{{.ID}}-preview" class="preview">
                         <p></p>
                     </div>
-                    <button id="submitcomment-{{.ID}}" class="signinupformbutton">Submit</button>   
                 </form>
             {{end}}
     
-            <div id="reactions">
-                {{if $loggedin}}
-                    <span id="{{.ID}}-comments_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-comments_likes-true" messageID="{{.ID}}" messageType="{{$likesComment}}" like="true" class="likeicon" name="comment-true"  onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
-                    <span id="{{.ID}}-comments_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-comments_likes-false" messageID="{{.ID}}" messageType="{{$likesComment}}" like="false" class="likeicon" name="comment-false"  onclick="handleLike(this.id)"><img class="likeicon" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></button>
-                {{else}} 
-                    <span id="{{.ID}}-comments_likes-true-n">{{index .Message.Likes 0}}</span><button id="{{.ID}}-comments_likes-true" class="likeicon not-active-link" name="comment-true"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128316.png"></img></button>
-                    <span id="{{.ID}}-comments_likes-false-n">{{index .Message.Likes 1}}</span><button id="{{.ID}}-comments_likes-false" class="likeicon not-active-link" name="comment-false"><img class="likeicon not-active-link" src="https://cdn-icons-png.flaticon.com/512/3128/3128319.png"></img></button>
-                {{end}}
-            </div>
         </div>
     {{end}}
     {{if .Session.IsLoggedin}}
@@ -109,6 +104,7 @@
             <textarea id="newcomment" name="content" placeholder="Write your comment..." onclick="checkComment()"></textarea>
             <div>
                 <label for="image_uploads"  class="signinupformbutton labelfordownload" >Download</label>
+                <button id="submitcomment" class="signinupformbutton submitcomment">Submit</button>
                 <input
                     type="file"
                     class="hidden image_uploads"
@@ -120,7 +116,6 @@
             <div id="preview" class="preview">
                 <p>No files currently selected for upload</p>
             </div>
-            <button id="submitcomment" class="signinupformbutton">Submit</button>
         </form>
     {{end}}
 <script>choseImage()</script>

@@ -240,22 +240,41 @@ func PostEditHandler(app *application.Application) http.HandlerFunc {
 			return
 		}
 		// save to DB
-		if messageType == "p" {
+		postID := id
+		switch messageType {
+		case "p":
 			// get the post from DB
 			post, err := app.ForumData.GetPostByID(id)
 			if err != nil {
 				ServerError(app, w, r, "getting a post faild", err)
 				return
 			}
-			imagesList = append(post.Message.Images, imagesList...)
-			err = app.ForumData.ModifyPost(id, "", "", imagesList)
+			post.Message.Images = append(post.Message.Images, imagesList...)
+			err = app.ForumData.ModifyPost(id, "", "", post.Message.Images)
 			if err != nil {
-				ServerError(app, w, r, "saving  post changes to DB failed", err)
+				ServerError(app, w, r, "saving the post changes to DB failed", err)
 				return
 			}
+		case "c":
+			// get the post from DB
+			var comment *model.Comment
+			comment, postID, err = app.ForumData.GetCommentByID(id)
+			if err != nil {
+				ServerError(app, w, r, "getting a comment faild", err)
+				return
+			}
+			comment.Message.Images = append(comment.Message.Images, imagesList...)
+			err = app.ForumData.ModifyComment(id, "", comment.Message.Images)
+			if err != nil {
+				ServerError(app, w, r, "saving  the comment changes to DB failed", err)
+				return
+			}
+		default:
+			ClientError(app, w, r, http.StatusBadRequest, fmt.Sprintf("edit message failed: wrong type of message %s, err: %v", messageType, err))
+			return
 		}
 
-		postsImagesDir := path.Join(USER_IMAGES_DIR, fmt.Sprintf("p%d", id))
+		postsImagesDir := path.Join(USER_IMAGES_DIR, fmt.Sprintf("p%d", postID))
 		err = os.Mkdir(postsImagesDir, 0o777)
 		if err != nil && !os.IsExist(err) {
 			ServerError(app, w, r, fmt.Sprintf("Can't create directory %s", postsImagesDir), err)
@@ -272,9 +291,15 @@ func PostEditHandler(app *application.Application) http.HandlerFunc {
 		if err != nil {
 			app.ErrLog.Printf("cannot remove directory %s", imagesTmpDir)
 		}
-
+		// for responce
+		type outputData struct {
+			Theme, Content string
+			Images         []string
+		}
+		var output outputData
 		// get the updated post from DB
-		if messageType == "p" {
+		switch messageType {
+		case "p":
 
 			post, err := app.ForumData.GetPostByID(id)
 			if err != nil {
@@ -286,20 +311,34 @@ func PostEditHandler(app *application.Application) http.HandlerFunc {
 			}
 
 			// write responce in JSON
-			output := struct {
-				Theme, Content string
-				Images         []string
-			}{post.Theme, post.Message.Content, post.Message.Images}
-			
-			w.Header().Set("Content-Type", "application.Application/json")
-			
-			jsonOutput, err := json.Marshal(output)
+			output = outputData{post.Theme, post.Message.Content, post.Message.Images}
+		case "c":
+
+			comment,_, err := app.ForumData.GetCommentByID(id)
+
 			if err != nil {
-				ServerError(app, w, r, "failed marshaling output data", err)
+				ServerError(app, w, r, "getting a comment faild", err)
 				return
 			}
-			
-			w.Write(jsonOutput)
+			for i, imageName := range comment.Message.Images {
+				comment.Message.Images[i] = path.Join("/", postsImagesDir, imageName)
+			}
+
+			// write responce in JSON
+			output = outputData{Content: comment.Message.Content, Images: comment.Message.Images}
+		default:
+			ClientError(app, w, r, http.StatusBadRequest, fmt.Sprintf("edit message failed: wrong type of message %s, err: %v", messageType, err))
+			return
 		}
+
+		w.Header().Set("Content-Type", "application.Application/json")
+
+		jsonOutput, err := json.Marshal(output)
+		if err != nil {
+			ServerError(app, w, r, "failed marshaling output data", err)
+			return
+		}
+
+		w.Write(jsonOutput)
 	}
 }
