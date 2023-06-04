@@ -12,13 +12,13 @@ This is a project of a web forum, which contains such things as:
 Before we start, here you can find the [audit](https://github.com/01-edu/public/blob/master/subjects/forum/image-upload/audit.md) questions. Are you ready? Let's go!
 
 ## How to run the app?
-
+>Note:  Golang v1.20 is required
 ### short words
 I'm sure you know how to use forum :)
 I just want to say that in this version of the app you can upload images when you create a new post or comment and also into the alredy created posts/comments.
 You can test it in two ways:
 - with docker: you can use `./docker.sh`
-- without docker: run a command `go run ./app` it will use the port 8080 or  `go run ./app --port=<number>` if you prefer  another port 
+- without docker: run a command `go run ./app` it will use the port 8080 or  `go run ./app --port=<number>` if you prefer  another port. In this case you need to have golang v1.20 on you computer. 
 
 ### long read
 The project requires Docker, so if you have no Docker on your computer, you need to install it. To do it, please follow this [>>> LINK <<<](https://docs.docker.com/get-docker/). You may also need to install the Docker extension to your VS Code if you use it. Please hold the Docker app opened while you launch the forum project.

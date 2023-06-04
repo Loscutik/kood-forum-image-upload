@@ -520,3 +520,7 @@ INFO:  2023/06/03 20:27:21 main.go:73: Starting server at port 8080
 INFO:  2023/06/03 20:31:19 config.go:53: DB has been created
 INFO:  2023/06/03 20:31:19 config.go:66: DB has been filled by examles of data
 INFO:  2023/06/03 20:31:19 main.go:73: Starting server at port 8080
+INFO:  2023/06/04 10:37:53 main.go:73: Starting server at port 8080
+INFO:  2023/06/04 10:38:14 main.go:73: Starting server at port 8080
+INFO:  2023/06/04 10:38:33 main.go:73: Starting server at port 3000
+INFO:  2023/06/04 10:38:51 main.go:73: Starting server at port 3005
